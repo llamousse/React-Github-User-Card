@@ -20,32 +20,31 @@ class Followers extends React.Component {
         axios.get("https://api.github.com/users/llamousse/followers")
             .then(response => {
                 const followersArr = response.data;
-                console.log("followers data (array of objects): ", response.data);
+                // console.log("followers data (array of objects): ", response.data);
                 followersArr.forEach(followerArr => {
                     this.state.followersArray.push(followerArr.login);
                 })
-                console.log("follower array: ", this.state.followersArray); 
                 // followersArray gets an array of follower names
 
                 this.state.followersArray.forEach(follower => {
                     axios.get(`https://api.github.com/users/${follower}`)
                         .then(response => {
-                            // console.log('individual follower data: ', response.data);
                             this.setState({ followerData: [...this.state.followerData, response.data] });
-                            console.log(this.state.followerData);
+                            // console.log(this.state.followerData);
                         })
                         .catch(err => {
                             console.log("Error: Something went wrong.", err);
-                            this.setState({ followerData: [] })
-                            this.setState({ errMessage: "Followers not found." })
+                            this.setState({ followerData: [] });
+                            this.setState({ errMessage: "Followers not found." });
                         })
                 })
                 // fetches each follower info from GitHub API & saves to followerData
             })
             .catch(err => {
-                console.log("Error: Something went wrong while loading followers.", err);
-                this.setState({ followerData: [] })
-                this.setState({ errMessage: "Followers not found." })
+                // console.log("Error: Something went wrong while loading followers.", err);
+                this.setState({ followersArray: [] });
+                this.setState({ followerData: [] });
+                this.setState({ errMessage: "Followers not found." });
             })
     }
 
@@ -63,17 +62,6 @@ class Followers extends React.Component {
                         followersUrl={follower.login}
                     />
                 ))}
-
-                {/* {this.state.followers.map((follower) => (
-                <FollowersCard
-                    image={this.state.follower.avatar_url}
-                    header={this.state.follower.login}
-                    meta={this.state.follower.name}
-                    description={this.state.follower.bio}
-                    extra={this.state.follower.followers}
-                    followersUrl={this.state.follower.login}
-                />
-                ))} */}
             </div>
         );
     }
